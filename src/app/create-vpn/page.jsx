@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Head from "next/head";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,11 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { motion } from "framer-motion";
 import { LampContainer } from "@/components/ui/lamp";
+import { Globe } from "@/components/ui/globe";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import {
@@ -28,13 +28,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
-
 export default function Home() {
   const [vpnName, setVpnName] = useState("");
   const [location, setLocation] = useState("");
   const [cloudProvider, setCloudProvider] = useState(""); // NEW STATE
   const [loading, setLoading] = useState(false);
-
 
   // Get API Base URL from environment variables
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -43,7 +41,9 @@ export default function Home() {
     event.preventDefault();
 
     if (!vpnName || !location || !cloudProvider) {
-      alert("Please enter a VPN name, select a location, and choose a cloud provider.");
+      alert(
+        "Please enter a VPN name, select a location, and choose a cloud provider."
+      );
       return;
     }
 
@@ -86,6 +86,7 @@ export default function Home() {
 
   return (
     <>
+    <title>Create VPN</title>
       <div className="relative z-20 lg:py-8 max-w-7xl mx-auto h-full w-full">
         {/* <LampContainer>
         
@@ -281,63 +282,10 @@ const FeatureDescription = ({ children }) => {
   );
 };
 
-export const SkeletonFour = () => {
+const SkeletonFour = () => {
   return (
     <div className="h-60 md:h-60  flex flex-col items-center relative bg-transparent dark:bg-transparent mt-10">
       <Globe className="absolute -right-10 md:-right-10 -bottom-80 md:-bottom-72" />
     </div>
-  );
-};
-
-export const Globe = ({ className }) => {
-  const canvasRef = useRef(null);
-  const locationCoordinates = {
-    "San Francisco": [37.7749, -122.4194],
-    "Amsterdam": [52.3676, 4.9041],
-    "Singapore": [1.3521, 103.8198],
-    "Frankfurt": [50.1109, 8.6821],
-    "Sydney": [-33.8688, 151.2093],
-    "Delhi": [28.6139, 77.2090],
-    "Bangalore": [12.9716, 77.5946],
-  };
-  useEffect(() => {
-    let phi = 0;
-
-    if (!canvasRef.current) return;
-
-    const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
-      width: 600 * 2,
-      height: 600 * 2,
-      phi: 0,
-      theta: 0,
-      dark: 1,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 6,
-      baseColor: [0.3, 0.3, 0.3],
-      markerColor: [0.1, 0.8, 1],
-      glowColor: [1, 1, 1],
-      markers: Object.values(locationCoordinates).map((coords) => ({
-        location: coords,
-        size: 0.05, // Adjust marker size
-      })),
-      onRender: (state) => {
-        state.phi = phi;
-        phi += 0.01;
-      },
-    });
-
-    return () => {
-      globe.destroy();
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: 600, height: 600, maxWidth: "100%", aspectRatio: 1 }}
-      className={className}
-    />
   );
 };
