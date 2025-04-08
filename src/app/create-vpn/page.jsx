@@ -20,6 +20,8 @@ import { LampContainer } from "@/components/ui/lamp";
 import { Globe } from "@/components/ui/globe";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
+import { MultiStepLoader as Loader } from "@/components/ui/multi-step-loader";
+import { IconSquareRoundedX } from "@tabler/icons-react";
 import {
   Card,
   CardContent,
@@ -35,7 +37,26 @@ export default function Home() {
   const [cloudProvider, setCloudProvider] = useState("");
   const [loading, setLoading] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-
+  const loadingStates = [
+    {
+      text: "Creating New Virtual Machine",
+    },
+    {
+      text: "Installing Required Software",
+    },
+    {
+      text: "Creating Configuration File",
+    },
+    {
+      text: "Uploading Configuration File",
+    },
+    {
+      text: "Creating Link for Configuration File",
+    },
+    {
+      text: "Your VPN is Ready",
+    }
+  ];
   // Get API Base URL from environment variables
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -50,37 +71,37 @@ export default function Home() {
     }
 
     setLoading(true);
-    try {
-      const apiUrl = `${BASE_URL}/create_vpn?name=${encodeURIComponent(
-        vpnName
-      )}&region=${encodeURIComponent(location)}`;
+    // try {
+    //   const apiUrl = `${BASE_URL}/create_vpn?name=${encodeURIComponent(
+    //     vpnName
+    //   )}&region=${encodeURIComponent(location)}`;
 
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    //   const response = await fetch(apiUrl, {
+    //     method: "GET",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
+    //   if (!response.ok) {
+    //     throw new Error(`Error: ${response.status}`);
+    //   }
 
-      const data = await response.json();
-      console.log(
-        `VPN "${vpnName}" deployed in ${location}!\nResponse: ${JSON.stringify(
-          data
-        )}`
-      );
+    //   const data = await response.json();
+    //   console.log(
+    //     `VPN "${vpnName}" deployed in ${location}!\nResponse: ${JSON.stringify(
+    //       data
+    //     )}`
+    //   );
 
-      // Flip the card to show success message
-      setIsFlipped(true);
-    } catch (error) {
-      console.error("API Error:", error);
-      alert("Failed to deploy VPN. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    //   // Flip the card to show success message
+    setIsFlipped(true);
+    // } catch (error) {
+    //   console.error("API Error:", error);
+    //   alert("Failed to deploy VPN. Please try again.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleReset = () => {
@@ -95,11 +116,11 @@ export default function Home() {
   };
   useEffect(() => {
     // Hide scroll when component mounts
-    document.body.style.overflow = 'hidden';
-    
+    document.body.style.overflow = "hidden";
+
     // Cleanup - restore scroll when component unmounts
     return () => {
-      document.body.style.overflow = 'visible';
+      document.body.style.overflow = "visible";
     };
   }, []); // Empty dependency array = runs once on mount
   return (
@@ -293,7 +314,36 @@ export default function Home() {
             >
               <BackgroundGradient containerClassName="rounded-[22px] p-[4px]">
                 <Card className="bg-white dark:bg-zinc-900 rounded-[22px] w-full h-[450px]">
-                  <CardHeader>
+                  <div className="w-full h-[60vh] flex items-center justify-center">
+                    {/* Core Loader Modal */}
+                    <Loader
+                      loadingStates={loadingStates}
+                      loading={loading}
+                      duration={120000}
+                    />
+
+                    {/* The buttons are for demo only, remove it in your actual code ⬇️ */}
+                    <button
+                      onClick={() => setLoading(true)}
+                      className="bg-[#39C3EF] hover:bg-[#39C3EF]/90 text-black mx-auto text-sm md:text-base transition font-medium duration-200 h-10 rounded-lg px-8 flex items-center justify-center"
+                      style={{
+                        boxShadow:
+                          "0px -1px 0px 0px #ffffff40 inset, 0px 1px 0px 0px #ffffff40 inset",
+                      }}
+                    >
+                      Click to load
+                    </button>
+
+                    {loading && (
+                      <button
+                        className="fixed top-4 right-4 text-black dark:text-white z-[120]"
+                        onClick={() => setLoading(false)}
+                      >
+                        <IconSquareRoundedX className="h-10 w-10" />
+                      </button>
+                    )}
+                  </div>
+                  {/* <CardHeader>
                     <CardTitle className="flex items-center justify-between mt-4 mb-2">
                       <div>VPN Information</div>
                       <div>
@@ -389,7 +439,7 @@ export default function Home() {
                     >
                       <span>Back to Form</span>
                     </HoverBorderGradient>
-                  </CardFooter>
+                  </CardFooter> */}
                 </Card>
               </BackgroundGradient>
             </div>
