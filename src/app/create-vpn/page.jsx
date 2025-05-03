@@ -71,37 +71,37 @@ export default function Home() {
     }
 
     setLoading(true);
-    // try {
-    //   const apiUrl = `${BASE_URL}/create_vpn?name=${encodeURIComponent(
-    //     vpnName
-    //   )}&region=${encodeURIComponent(location)}`;
+    setIsFlipped(true);
+    try {
+      const apiUrl = `${BASE_URL}/create_vpn?name=${encodeURIComponent(
+        vpnName
+      )}&region=${encodeURIComponent(location)}`;
 
-    //   const response = await fetch(apiUrl, {
-    //     method: "GET",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    //   if (!response.ok) {
-    //     throw new Error(`Error: ${response.status}`);
-    //   }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
 
-    //   const data = await response.json();
-    //   console.log(
-    //     `VPN "${vpnName}" deployed in ${location}!\nResponse: ${JSON.stringify(
-    //       data
-    //     )}`
-    //   );
+      const data = await response.json();
+      console.log(
+        `VPN "${vpnName}" deployed in ${location}!\nResponse: ${JSON.stringify(
+          data
+        )}`
+      );
 
     //   // Flip the card to show success message
-    setIsFlipped(true);
-    // } catch (error) {
-    //   console.error("API Error:", error);
-    //   alert("Failed to deploy VPN. Please try again.");
-    // } finally {
-    //   setLoading(false);
-    // }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Failed to deploy VPN. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -323,7 +323,7 @@ export default function Home() {
                     />
 
                     {/* The buttons are for demo only, remove it in your actual code ⬇️ */}
-                    <button
+                    {/* <button
                       onClick={() => setLoading(true)}
                       className="bg-[#39C3EF] hover:bg-[#39C3EF]/90 text-black mx-auto text-sm md:text-base transition font-medium duration-200 h-10 rounded-lg px-8 flex items-center justify-center"
                       style={{
@@ -332,7 +332,7 @@ export default function Home() {
                       }}
                     >
                       Click to load
-                    </button>
+                    </button> */}
 
                     {loading && (
                       <button
@@ -343,7 +343,7 @@ export default function Home() {
                       </button>
                     )}
                   </div>
-                  {/* <CardHeader>
+                  <CardHeader>
                     <CardTitle className="flex items-center justify-between mt-4 mb-2">
                       <div>VPN Information</div>
                       <div>
@@ -439,7 +439,7 @@ export default function Home() {
                     >
                       <span>Back to Form</span>
                     </HoverBorderGradient>
-                  </CardFooter> */}
+                  </CardFooter>
                 </Card>
               </BackgroundGradient>
             </div>
