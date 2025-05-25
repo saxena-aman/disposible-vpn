@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Head from "next/head";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,8 +14,6 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { motion } from "framer-motion";
-import { LampContainer } from "@/components/ui/lamp";
 import { Globe } from "@/components/ui/globe";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
@@ -30,9 +27,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ModeToggle } from "@/components/mode-toggle";
 export default function Home() {
   const [vpnName, setVpnName] = useState("");
+  const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
   const [cloudProvider, setCloudProvider] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,27 +52,24 @@ export default function Home() {
     },
     {
       text: "Your VPN is Ready",
-    }
+    },
   ];
   // Get API Base URL from environment variables
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_WEBHOOK;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!vpnName || !location || !cloudProvider) {
-      alert(
-        "Please enter a VPN name, select a location, and choose a cloud provider."
-      );
+    if (!vpnName || !location || !email) {
       return;
     }
 
     setLoading(true);
     setIsFlipped(true);
     try {
-      const apiUrl = `${BASE_URL}/create_vpn?name=${encodeURIComponent(
+      const apiUrl = `${BASE_URL}?name=${encodeURIComponent(
         vpnName
-      )}&region=${encodeURIComponent(location)}`;
+      )}&region=${encodeURIComponent(location)}&email=${encodeURIComponent(email)}`;
 
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -88,14 +82,7 @@ export default function Home() {
         throw new Error(`Error: ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log(
-        `VPN "${vpnName}" deployed in ${location}!\nResponse: ${JSON.stringify(
-          data
-        )}`
-      );
-
-    //   // Flip the card to show success message
+      //   // Flip the card to show success message
     } catch (error) {
       console.error("API Error:", error);
       alert("Failed to deploy VPN. Please try again.");
@@ -111,9 +98,6 @@ export default function Home() {
     setIsFlipped(false);
   };
 
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
   useEffect(() => {
     // Hide scroll when component mounts
     document.body.style.overflow = "hidden";
@@ -170,14 +154,6 @@ export default function Home() {
                       <CardHeader>
                         <CardTitle className="flex items-center justify-between mt-4 mb-2">
                           <div>Create VPN</div>
-                          <div>
-                            <button
-                              onClick={handleFlip}
-                              className="text-sm text-blue-500 hover:underline"
-                            >
-                              View Info
-                            </button>
-                          </div>
                         </CardTitle>
                         <CardDescription>
                           Deploy your new VPN in one click.
@@ -198,7 +174,17 @@ export default function Home() {
                                 className="w-full"
                               />
                             </div>
-
+                            <div className="flex flex-col space-y-2.5">
+                              <Label htmlFor="name">Email</Label>
+                              <Input
+                                id="email"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full"
+                              />
+                            </div>
                             {/* Location Select Dropdown */}
                             <div className="flex flex-col space-y-2.5">
                               <Label htmlFor="location">Location</Label>
@@ -227,7 +213,7 @@ export default function Home() {
                               </Select>
                             </div>
                             {/* Cloud Provider Select Dropdown */}
-                            <div className="flex flex-col space-y-2.5">
+                            {/* <div className="flex flex-col space-y-2.5">
                               <Label htmlFor="cloudProvider">
                                 Cloud Provider
                               </Label>
@@ -253,7 +239,7 @@ export default function Home() {
                                   <SelectItem value="Linode">Linode</SelectItem>
                                 </SelectContent>
                               </Select>
-                            </div>
+                            </div> */}
                           </div>
 
                           {/* Buttons */}
@@ -313,132 +299,118 @@ export default function Home() {
               }}
             >
               <BackgroundGradient containerClassName="rounded-[22px] p-[4px]">
-                <Card className="bg-white dark:bg-zinc-900 rounded-[22px] w-full h-[450px]">
-                  <div className="w-full h-[60vh] flex items-center justify-center">
-                    {/* Core Loader Modal */}
-                    <Loader
-                      loadingStates={loadingStates}
-                      loading={loading}
-                      duration={120000}
-                    />
-
-                    {/* The buttons are for demo only, remove it in your actual code ⬇️ */}
-                    {/* <button
-                      onClick={() => setLoading(true)}
-                      className="bg-[#39C3EF] hover:bg-[#39C3EF]/90 text-black mx-auto text-sm md:text-base transition font-medium duration-200 h-10 rounded-lg px-8 flex items-center justify-center"
-                      style={{
-                        boxShadow:
-                          "0px -1px 0px 0px #ffffff40 inset, 0px 1px 0px 0px #ffffff40 inset",
-                      }}
-                    >
-                      Click to load
-                    </button> */}
-
-                    {loading && (
+                <Card className="bg-white dark:bg-zinc-900 rounded-[22px] w-full min-h-[450px]">
+                  {loading && (
+                    <div className="w-full h-[60vh] flex items-center justify-center">
+                      <Loader
+                        loadingStates={loadingStates}
+                        loading={loading}
+                        duration={2000}
+                      />
                       <button
-                        className="fixed top-4 right-4 text-black dark:text-white z-[120]"
+                        className="absolute top-4 right-4 text-black dark:text-white z-20"
                         onClick={() => setLoading(false)}
                       >
                         <IconSquareRoundedX className="h-10 w-10" />
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                  
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between mt-4 mb-2">
-                      <div>VPN Information</div>
-                      <div>
-                        <button
-                          onClick={handleFlip}
-                          className="text-sm text-blue-500 hover:underline"
-                        >
-                          Back to Form
-                        </button>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        Wireguard VPN Setup
                       </div>
                     </CardTitle>
                     <CardDescription>
-                      {vpnName
-                        ? `Your "${vpnName}" VPN details`
-                        : "VPN details"}
+                      Follow these simple steps to connect to your VPN
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      {vpnName ? (
-                        <>
-                          <div className="space-y-2">
-                            <h3 className="text-lg font-medium">
-                              Deployment Successful!
-                            </h3>
-                            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                              Your VPN has been successfully deployed with the
-                              following configurations:
-                            </p>
-                          </div>
+                  
+                  <CardContent className="space-y-3">
+                    {/* Step 1 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                        1
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-black dark:text-white mb-1">
+                          Install Wireguard Client
+                        </h3>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">
+                          Download and install Wireguard client software on your PC or mobile device from the official website.
+                        </p>
+                        <a 
+                          href="https://www.wireguard.com/install/" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600 hover:underline transition-colors"
+                        >
+                          Download Wireguard
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium">Name</p>
-                              <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                {vpnName}
-                              </p>
-                            </div>
+                    {/* Step 2 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                        2
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-black dark:text-white mb-1">
+                          Check Your Email
+                        </h3>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                          You will receive an email with the client configuration file download link within 2 minutes of deployment.
+                        </p>
+                      </div>
+                    </div>
 
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium">Location</p>
-                              <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                {location}
-                              </p>
-                            </div>
+                    {/* Step 3 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                        3
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-black dark:text-white mb-1">
+                          Download Configuration File
+                        </h3>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                          Click the download button in the email to get your personalized Wireguard configuration file.
+                        </p>
+                      </div>
+                    </div>
 
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium">
-                                Cloud Provider
-                              </p>
-                              <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                {cloudProvider}
-                              </p>
-                            </div>
-
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium">Status</p>
-                              <p className="text-sm text-green-500">Active</p>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <h3 className="text-lg font-medium">
-                              Connection Details
-                            </h3>
-                            <div className="bg-neutral-100 dark:bg-neutral-800 p-4 rounded-md">
-                              <p className="text-sm font-mono">
-                                IP: 192.168.X.X
-                                <br />
-                                Port: XXXX
-                                <br />
-                                Protocol: OpenVPN
-                              </p>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center h-60">
-                          <p className="text-center text-neutral-500 dark:text-neutral-400">
-                            Complete the form to see your VPN details
-                          </p>
-                        </div>
-                      )}
+                    {/* Step 4 */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                        4
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-black dark:text-white mb-1">
+                          Connect & Enjoy
+                        </h3>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                          Open Wireguard client, import your configuration file, and click connect. You're now securely connected to your VPN!
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
-                  <CardFooter className="flex justify-end pt-4">
-                    <HoverBorderGradient
-                      containerClassName="rounded-full"
-                      as="button"
-                      type="button"
-                      onClick={handleFlip}
-                      className="px-6 py-2 bg-white text-black dark:bg-black dark:text-white"
-                    >
-                      <span>Back to Form</span>
-                    </HoverBorderGradient>
+                  
+                  <CardFooter className="flex justify-center pt-4">
+                    <div className="text-center">
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Need help? Contact our support team
+                      </p>
+                    </div>
                   </CardFooter>
                 </Card>
               </BackgroundGradient>
