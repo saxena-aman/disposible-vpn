@@ -30,7 +30,7 @@ import {
 export default function Home() {
   const [vpnName, setVpnName] = useState("");
   const [email, setEmail] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("Singapore");
   const [cloudProvider, setCloudProvider] = useState("");
   const [loading, setLoading] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -69,7 +69,9 @@ export default function Home() {
     try {
       const apiUrl = `${BASE_URL}?name=${encodeURIComponent(
         vpnName
-      )}&region=${encodeURIComponent(location)}&email=${encodeURIComponent(email)}`;
+      )}&region=${encodeURIComponent(location)}&email=${encodeURIComponent(
+        email
+      )}`;
 
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -113,13 +115,13 @@ export default function Home() {
       <div className="relative z-20 lg:py-8 max-w-7xl mx-auto h-full w-full grid place-items-center">
         <div className="px-8">
           <h4 className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-black dark:text-white">
-            Packed with thousands of features
+            Seamlessly Secure Your Digital Life
           </h4>
 
           <p className="text-sm lg:text-base max-w-2xl my-4 mx-auto text-neutral-500 text-center font-normal dark:text-neutral-300">
-            From Image generation to video generation, Everything AI has APIs
-            for literally everything. It can even create this website copy for
-            you.
+            From instant privacy to robust online protection, our Disposable VPN
+            empowers your digital journey. Effortless setup, ultimate peace of
+            mind.
           </p>
         </div>
 
@@ -190,6 +192,7 @@ export default function Home() {
                               <Label htmlFor="location">Location</Label>
                               <Select
                                 onValueChange={setLocation}
+                                defaultValue="Singapore" // Set the default value here
                                 value={location}
                               >
                                 <SelectTrigger id="location" className="w-full">
@@ -274,11 +277,14 @@ export default function Home() {
                   {/* Right Section - FeatureCard */}
                   <div className="w-full md:w-1/2">
                     <FeatureCard className="border-b lg:border-none h-full">
-                      <FeatureTitle>Deploy in seconds</FeatureTitle>
+                      <FeatureTitle>
+                        Instant Deployment, Global Reach
+                      </FeatureTitle>
                       <FeatureDescription>
-                        With our blazing fast, state of the art, cutting-edge,
-                        we are so back cloud services (read AWS) - you can
-                        deploy your model in seconds.
+                        Our lightning-fast, cutting-edge cloud infrastructure
+                        (including AWS) ensures your disposable VPN is live in
+                        moments. Experience seamless, ironclad protection,
+                        wherever you are.
                       </FeatureDescription>
                       <div className="h-full w-full">
                         <SkeletonFour />
@@ -315,13 +321,21 @@ export default function Home() {
                       </button>
                     </div>
                   )}
-                  
+
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between mt-4 mb-2">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-5 h-5 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                         Wireguard VPN Setup
@@ -331,7 +345,7 @@ export default function Home() {
                       Follow these simple steps to connect to your VPN
                     </CardDescription>
                   </CardHeader>
-                  
+
                   <CardContent className="space-y-3">
                     {/* Step 1 */}
                     <div className="flex items-start gap-4">
@@ -343,17 +357,28 @@ export default function Home() {
                           Install Wireguard Client
                         </h3>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">
-                          Download and install Wireguard client software on your PC or mobile device from the official website.
+                          Download and install Wireguard client software on your
+                          PC or mobile device from the official website.
                         </p>
-                        <a 
-                          href="https://www.wireguard.com/install/" 
-                          target="_blank" 
+                        <a
+                          href="https://www.wireguard.com/install/"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600 hover:underline transition-colors"
                         >
                           Download Wireguard
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
                           </svg>
                         </a>
                       </div>
@@ -369,7 +394,9 @@ export default function Home() {
                           Check Your Email
                         </h3>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                          You will receive an email with the client configuration file download link within 2 minutes of deployment.
+                          You will receive an email with the client
+                          configuration file download link within 2 minutes of
+                          deployment.
                         </p>
                       </div>
                     </div>
@@ -384,7 +411,8 @@ export default function Home() {
                           Download Configuration File
                         </h3>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                          Click the download button in the email to get your personalized Wireguard configuration file.
+                          Click the download button in the email to get your
+                          personalized Wireguard configuration file.
                         </p>
                       </div>
                     </div>
@@ -399,12 +427,14 @@ export default function Home() {
                           Connect & Enjoy
                         </h3>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                          Open Wireguard client, import your configuration file, and click connect. You're now securely connected to your VPN!
+                          Open Wireguard client, import your configuration file,
+                          and click connect. You're now securely connected to
+                          your VPN!
                         </p>
                       </div>
                     </div>
                   </CardContent>
-                  
+
                   <CardFooter className="flex justify-center pt-4">
                     <div className="text-center">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">
