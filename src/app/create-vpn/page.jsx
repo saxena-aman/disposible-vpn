@@ -33,7 +33,7 @@ export default function Home() {
   const [location, setLocation] = useState("Singapore");
   const [cloudProvider, setCloudProvider] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(true);
   const loadingStates = [
     {
       text: "Creating New Virtual Machine",
@@ -438,7 +438,13 @@ export default function Home() {
                   <CardFooter className="flex justify-center pt-4">
                     <div className="text-center">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        Need help? Contact our support team
+                        Need help?{" "}
+                        <a
+                          href="mailto:amansaxena2809@gmail.com"
+                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          Contact our support team
+                        </a>
                       </p>
                     </div>
                   </CardFooter>
