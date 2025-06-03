@@ -33,7 +33,7 @@ export default function Home() {
   const [location, setLocation] = useState("Singapore");
   const [cloudProvider, setCloudProvider] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(true);
+  const [isFlipped, setIsFlipped] = useState(false);
   const loadingStates = [
     {
       text: "Creating New Virtual Machine",
